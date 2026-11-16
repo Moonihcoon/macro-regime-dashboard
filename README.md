@@ -4,7 +4,7 @@
 레짐 점수를 계산해 **KODEX 200과 현금 사이의 비중**을 조절하는 전략의 대시보드입니다.
 
 - 화면: GitHub Pages (`index.html` + `app.js` + `data/dashboard.json`)
-- 자동 갱신: GitHub Actions가 **한국 시간 평일 07:30**에 데이터 수집 → 백테스트 → `data/dashboard.json` 갱신 → 커밋
+- 자동 갱신: GitHub Actions가 **한국 시간 평일 07:30과 20:00**에 데이터 수집 → 백테스트 → `data/dashboard.json` 갱신 → 커밋
 
 > 연구용 코드이며 투자 권유가 아닙니다.
 

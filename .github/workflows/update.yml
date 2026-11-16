@@ -2,8 +2,10 @@ name: Daily update
 
 on:
   schedule:
-    # 한국 시간 평일(월~금) 07:30 = UTC 일~목 22:30
+    # 한국 시간 평일(월~금) 07:30 = UTC 일~목 22:30  (미국장 마감 반영)
     - cron: "30 22 * * 0-4"
+    # 한국 시간 평일(월~금) 20:00 = UTC 월~금 11:00  (한국장 마감 반영)
+    - cron: "0 11 * * 1-5"
   workflow_dispatch: {}
 
 permissions:
