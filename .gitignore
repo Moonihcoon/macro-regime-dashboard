@@ -1,0 +1,5 @@
+__pycache__/
+data/raw/
+data/merged_daily.csv
+output/daily_result.csv
+.venv/

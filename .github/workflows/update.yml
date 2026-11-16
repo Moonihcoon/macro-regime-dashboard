@@ -1,0 +1,58 @@
+name: Daily update
+
+on:
+  schedule:
+    # 한국 시간 평일(월~금) 07:30 = UTC 일~목 22:30
+    - cron: "30 22 * * 0-4"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Collect data
+        env:
+          ECOS_KEY: ${{ secrets.ECOS_KEY }}
+        run: |
+          if [ -n "$ECOS_KEY" ]; then
+            python data_collector.py --ecos-key "$ECOS_KEY"
+          else
+            python data_collector.py
+          fi
+
+      - name: Backtest
+        run: python backtest.py
+
+      - name: Export dashboard data
+        run: python export_site.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add data/dashboard.json output/summary.csv output/yearly.csv output/regime_report.csv \
+                  output/score_buckets.csv output/sensitivity.csv output/backtest_chart.png
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "daily update $(TZ=Asia/Seoul date +%F)"
+            git push
+          fi
